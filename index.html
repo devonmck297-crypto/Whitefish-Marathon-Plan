@@ -249,7 +249,7 @@
         }
         
         .week-card.collapsed .collapse-indicator {
-            transform: rotate(180deg);
+            transform: rotate(-90deg);
         }
 
         .week-title {
@@ -635,6 +635,80 @@
         .note-display.visible {
             display: block;
         }
+        
+        /* Edit mode styles */
+        .edit-mode-btn {
+            background: transparent;
+            color: var(--text-light);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+            margin-top: 1.5rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .edit-mode-btn:hover {
+            background: var(--bg);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .edit-mode-btn.active {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        body.edit-mode .workout-name,
+        body.edit-mode .workout-distance {
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        
+        body.edit-mode .workout-name:hover,
+        body.edit-mode .workout-distance:hover {
+            background: rgba(102, 126, 234, 0.1);
+            outline: 2px dashed #667eea;
+        }
+        
+        body.edit-mode .workout-name::after,
+        body.edit-mode .workout-distance::after {
+            content: '✏️';
+            margin-left: 0.5rem;
+            font-size: 0.9em;
+        }
+        
+        .workout-name.editing,
+        .workout-distance.editing {
+            background: white;
+            outline: 3px solid #667eea;
+            padding: 0.5rem;
+        }
+        
+        .workout-name input,
+        .workout-distance input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font: inherit;
+            color: inherit;
+            padding: 0;
+        }
+        
+        .workout-name input:focus,
+        .workout-distance input:focus {
+            outline: none;
+        }
 
         @media (max-width: 768px) {
             .day-row {
@@ -672,7 +746,7 @@
                 </div>
 
                 <!-- Week 1 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 1 | Jan 26 – Feb 1</div>
                         <div class="week-total">47 km</div>
@@ -728,7 +802,7 @@
                 </div>
 
                 <!-- Week 2 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 2 | Feb 2 – Feb 8</div>
                         <div class="week-total">49 km</div>
@@ -784,7 +858,7 @@
                 </div>
 
                 <!-- Week 3 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 3 | Feb 9 – Feb 15</div>
                         <div class="week-total">53 km</div>
@@ -840,7 +914,7 @@
                 </div>
 
                 <!-- Week 4 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 4 | Feb 16 – Feb 22</div>
                         <div class="week-total">57 km</div>
@@ -905,7 +979,7 @@
                 </div>
 
                 <!-- Week 5 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 5 | Feb 23 – Mar 1</div>
                         <div class="week-total">50 km</div>
@@ -961,7 +1035,7 @@
                 </div>
 
                 <!-- Week 6 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 6 | Mar 2 – Mar 8</div>
                         <div class="week-total">56-58 km</div>
@@ -1017,7 +1091,7 @@
                 </div>
 
                 <!-- Week 7 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 7 | Mar 9 – Mar 15</div>
                         <div class="week-total">61-62 km</div>
@@ -1073,7 +1147,7 @@
                 </div>
 
                 <!-- Week 8 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 8 | Mar 16 – Mar 22</div>
                         <div class="week-total">64-66 km</div>
@@ -1138,7 +1212,7 @@
                 </div>
 
                 <!-- Week 9 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 9 | Mar 23 – Mar 29</div>
                         <div class="week-total">59-60 km</div>
@@ -1194,7 +1268,7 @@
                 </div>
 
                 <!-- Week 10 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 10 | Mar 30 – Apr 5</div>
                         <div class="week-total">62-64 km</div>
@@ -1250,7 +1324,7 @@
                 </div>
 
                 <!-- Week 11 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 11 | Apr 6 – Apr 12</div>
                         <div class="week-total">70-74 km</div>
@@ -1306,7 +1380,7 @@
                 </div>
 
                 <!-- Week 12 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 12 | Apr 13 – Apr 19</div>
                         <div class="week-total">64-69 km</div>
@@ -1362,7 +1436,7 @@
                 </div>
 
                 <!-- Week 13 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 13 | Apr 20 – Apr 26</div>
                         <div class="week-total">47+ km</div>
@@ -1427,7 +1501,7 @@
                 </div>
 
                 <!-- Week 14 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 14 | Apr 27 – May 3</div>
                         <div class="week-total">53-62 km</div>
@@ -1483,7 +1557,7 @@
                 </div>
 
                 <!-- Week 15 -->
-                <div class="week-card">
+                <div class="week-card collapsed">
                     <div class="week-header">
                         <div class="week-title">Week 15 | May 4 – May 10</div>
                         <div class="week-total">37-44 km</div>
@@ -1539,7 +1613,7 @@
                 </div>
 
                 <!-- Week 16 -->
-                <div class="week-card race-week">
+                <div class="week-card race-week collapsed">
                     <div class="week-header">
                         <div class="week-title">⭐ RACE WEEK | May 11 – May 17 ⭐</div>
                         <div class="week-total">SUB-3:35! 🎯</div>
@@ -1617,6 +1691,7 @@
                         <p>5:05/km (8:11/mile)<br>Marathon: 3:34:59 🏆</p>
                     </div>
                 </div>
+                <button class="edit-mode-btn" id="editModeBtn">✏️ Edit Workouts</button>
             </div>
         </div>
     </div>
@@ -1630,6 +1705,13 @@
             weekCards.forEach((weekCard, weekIndex) => {
                 const weekHeader = weekCard.querySelector('.week-header');
                 const weekTitle = weekHeader.querySelector('.week-title');
+                
+                // Load saved collapsed state
+                const weekId = `week-${weekIndex}`;
+                const isCollapsed = localStorage.getItem(`collapsed-${weekId}`);
+                if (isCollapsed === 'false') {
+                    weekCard.classList.remove('collapsed');
+                }
                 
                 // Wrap week title and add compliance display and collapse indicator
                 const titleWrapper = document.createElement('div');
@@ -1645,9 +1727,11 @@
                 collapseIndicator.textContent = '▼';
                 weekHeader.appendChild(collapseIndicator);
                 
-                // Make header clickable for collapse
+                // Make header clickable for collapse and save state
                 weekHeader.addEventListener('click', function(e) {
                     weekCard.classList.toggle('collapsed');
+                    const isNowCollapsed = weekCard.classList.contains('collapsed');
+                    localStorage.setItem(`collapsed-${weekId}`, isNowCollapsed);
                 });
                 
                 const daysGrid = weekCard.querySelector('.days-grid');
@@ -1685,6 +1769,24 @@
                     
                     // Move day-row into workout-card
                     workoutCard.appendChild(dayRow);
+                    
+                    // Load saved workout data if exists
+                    const savedWorkoutName = localStorage.getItem(`workout-name-${dayId}`);
+                    const savedWorkoutDistance = localStorage.getItem(`workout-distance-${dayId}`);
+                    
+                    const workoutNameEl = dayRow.querySelector('.workout-name');
+                    const workoutDistanceEl = dayRow.querySelector('.workout-distance');
+                    
+                    if (savedWorkoutName) {
+                        workoutNameEl.textContent = savedWorkoutName;
+                    }
+                    if (savedWorkoutDistance) {
+                        workoutDistanceEl.textContent = savedWorkoutDistance;
+                    }
+                    
+                    // Store original values as data attributes
+                    workoutNameEl.dataset.id = dayId;
+                    workoutDistanceEl.dataset.id = dayId;
                     
                     // Create completion checkbox
                     const checkbox = document.createElement('input');
@@ -1977,15 +2079,80 @@
             console.log('Tracker initialized!');
         }
         
+        // Edit mode functionality
+        function initializeEditMode() {
+            const editBtn = document.getElementById('editModeBtn');
+            let editMode = false;
+            
+            editBtn.addEventListener('click', function() {
+                editMode = !editMode;
+                document.body.classList.toggle('edit-mode', editMode);
+                
+                if (editMode) {
+                    editBtn.textContent = '✅ Done Editing';
+                    editBtn.classList.add('active');
+                } else {
+                    editBtn.textContent = '✏️ Edit Workouts';
+                    editBtn.classList.remove('active');
+                }
+            });
+            
+            // Make workout names and distances editable
+            document.addEventListener('click', function(e) {
+                if (!editMode) return;
+                
+                const target = e.target;
+                if (!target.classList.contains('workout-name') && !target.classList.contains('workout-distance')) return;
+                if (target.classList.contains('editing')) return;
+                
+                const originalText = target.textContent;
+                const dayId = target.dataset.id;
+                const isName = target.classList.contains('workout-name');
+                const storageKey = isName ? `workout-name-${dayId}` : `workout-distance-${dayId}`;
+                
+                target.classList.add('editing');
+                
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = originalText;
+                
+                target.textContent = '';
+                target.appendChild(input);
+                input.focus();
+                input.select();
+                
+                function finishEdit() {
+                    const newValue = input.value.trim() || originalText;
+                    target.textContent = newValue;
+                    target.classList.remove('editing');
+                    
+                    // Save to localStorage
+                    localStorage.setItem(storageKey, newValue);
+                }
+                
+                input.addEventListener('blur', finishEdit);
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        finishEdit();
+                    } else if (e.key === 'Escape') {
+                        target.textContent = originalText;
+                        target.classList.remove('editing');
+                    }
+                });
+            });
+        }
+        
         // Initialize everything when DOM is ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', function() {
                 initializeInteractiveElements();
                 setTimeout(initializeTracker, 100);
+                initializeEditMode();
             });
         } else {
             initializeInteractiveElements();
             setTimeout(initializeTracker, 100);
+            initializeEditMode();
         }
     </script>
 </body>
