@@ -1943,6 +1943,170 @@
             });
         }
         
+        // Find peak mileage week
+        function findPeakMileage() {
+            let peakMin = 0;
+            let peakMax = 0;
+            let peakWeekTitle = '';
+            
+            document.querySelectorAll('.week-card').forEach(weekCard => {
+                const distanceElements = weekCard.querySelectorAll('.workout-distance');
+                let minTotal = 0;
+                let maxTotal = 0;
+                
+                distanceElements.forEach(el => {
+                    const text = el.textContent.trim();
+                    if (text === '—' || text === '') return;
+                    
+                    const numbers = text.match(/(\d+(?:\.\d+)?)/g);
+                    if (numbers && numbers.length > 0) {
+                        if (numbers.length === 1) {
+                            const val = parseFloat(numbers[0]);
+                            minTotal += val;
+                            maxTotal += val;
+                        } else if (numbers.length >= 2) {
+                            minTotal += parseFloat(numbers[0]);
+                            maxTotal += parseFloat(numbers[1]);
+                        }
+                    }
+                });
+                
+                // Check if this week has higher max (or if tied, higher min)
+                if (maxTotal > peakMax || (maxTotal === peakMax && minTotal > peakMin)) {
+                    peakMin = minTotal;
+                    peakMax = maxTotal;
+                    const weekTitleEl = weekCard.querySelector('.week-title');
+                    if (weekTitleEl) {
+                        peakWeekTitle = weekTitleEl.textContent.split('|')[0].trim();
+                    }
+                }
+            });
+            
+            return { min: peakMin, max: peakMax, week: peakWeekTitle };
+        }
+        
+        // Find longest run
+        function findLongestRun() {
+            let longestMin = 0;
+            let longestMax = 0;
+            let longestDate = '';
+            
+            document.querySelectorAll('.day-row.long-run').forEach(dayRow => {
+                const distanceEl = dayRow.querySelector('.workout-distance');
+                const dateEl = dayRow.querySelector('.day-date');
+                
+                if (!distanceEl) return;
+                
+                const text = distanceEl.textContent.trim();
+                if (text === '—' || text === '') return;
+                
+                const numbers = text.match(/(\d+(?:\.\d+)?)/g);
+                if (numbers && numbers.length > 0) {
+                    let min, max;
+                    if (numbers.length === 1) {
+                        min = max = parseFloat(numbers[0]);
+                    } else {
+                        min = parseFloat(numbers[0]);
+                        max = parseFloat(numbers[1]);
+                    }
+                    
+                    // Check if this is the longest (compare max values)
+                    if (max > longestMax || (max === longestMax && min > longestMin)) {
+                        longestMin = min;
+                        longestMax = max;
+                        if (dateEl) {
+                            longestDate = dateEl.textContent;
+                        }
+                        
+                        // Try to get the year from the week card
+                        const weekCard = dayRow.closest('.week-card');
+                        if (weekCard) {
+                            const weekTitle = weekCard.querySelector('.week-title');
+                            if (weekTitle) {
+                                const titleText = weekTitle.textContent;
+                                // Extract year from title like "Week 11 | Apr 6 – Apr 12"
+                                const yearMatch = titleText.match(/\d{4}/);
+                                if (yearMatch && !longestDate.includes(yearMatch[0])) {
+                                    longestDate += `, ${yearMatch[0]}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            return { min: longestMin, max: longestMax, date: longestDate };
+        }
+        
+        // Update training summary
+        function updateTrainingSummary() {
+            // Update peak mileage
+            const peakData = findPeakMileage();
+            const peakMileageEl = document.querySelector('.summary-item:nth-child(2) p');
+            if (peakMileageEl && peakData.max > 0) {
+                let peakText;
+                if (peakData.min === peakData.max) {
+                    peakText = `${peakData.max} km`;
+                } else {
+                    peakText = `${peakData.min}–${peakData.max} km`;
+                }
+                if (peakData.week) {
+                    peakMileageEl.innerHTML = `${peakText}<br>(${peakData.week})`;
+                } else {
+                    peakMileageEl.textContent = peakText;
+                }
+            }
+            
+            // Update longest run
+            const longestData = findLongestRun();
+            const longestRunEl = document.querySelector('.summary-item:nth-child(3) p');
+            if (longestRunEl && longestData.max > 0) {
+                let distanceText;
+                if (longestData.min === longestData.max) {
+                    distanceText = `${longestData.max} km`;
+                } else {
+                    distanceText = `${longestData.min}–${longestData.max} km`;
+                }
+                
+                // Get workout details from the longest run
+                const longestRunRow = Array.from(document.querySelectorAll('.day-row.long-run')).find(row => {
+                    const distEl = row.querySelector('.workout-distance');
+                    if (!distEl) return false;
+                    const text = distEl.textContent.trim();
+                    const numbers = text.match(/(\d+(?:\.\d+)?)/g);
+                    if (!numbers) return false;
+                    const max = numbers.length > 1 ? parseFloat(numbers[1]) : parseFloat(numbers[0]);
+                    return max === longestData.max;
+                });
+                
+                let workoutDetail = '';
+                if (longestRunRow) {
+                    const workoutName = longestRunRow.querySelector('.workout-name');
+                    if (workoutName) {
+                        const nameText = workoutName.textContent;
+                        // Extract MP info if present
+                        if (nameText.includes('@ MP') || nameText.includes('MP')) {
+                            const mpMatch = nameText.match(/(\d+(?:-\d+)?)\s*km\s*(?:@|at)?\s*MP/i);
+                            if (mpMatch) {
+                                workoutDetail = ` with ${mpMatch[1]}km @ MP`;
+                            } else if (nameText.includes('Last')) {
+                                const lastMatch = nameText.match(/Last\s+(\d+(?:-\d+)?)\s*km/i);
+                                if (lastMatch) {
+                                    workoutDetail = ` with last ${lastMatch[1]}km @ MP`;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (longestData.date) {
+                    longestRunEl.innerHTML = `${distanceText}${workoutDetail}<br>(${longestData.date})`;
+                } else {
+                    longestRunEl.textContent = distanceText + workoutDetail;
+                }
+            }
+        }
+        
         // Initialize tracker
         function initializeTracker() {
             console.log('Initializing tracker...');
@@ -2126,6 +2290,9 @@
             // Calculate initial weekly totals
             updateAllWeeklyTotals();
             
+            // Update training summary
+            updateTrainingSummary();
+            
             console.log('Tracker initialized!');
         }
         
@@ -2185,6 +2352,8 @@
                         if (weekCard) {
                             calculateWeeklyTotal(weekCard);
                         }
+                        // Update training summary (peak mileage and longest run)
+                        updateTrainingSummary();
                     }
                 }
                 
