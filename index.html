@@ -1947,7 +1947,7 @@
         function findPeakMileage() {
             let peakMin = 0;
             let peakMax = 0;
-            let peakWeekTitle = '';
+            let peakWeekInfo = '';
             
             document.querySelectorAll('.week-card').forEach(weekCard => {
                 const distanceElements = weekCard.querySelectorAll('.workout-distance');
@@ -1977,12 +1977,22 @@
                     peakMax = maxTotal;
                     const weekTitleEl = weekCard.querySelector('.week-title');
                     if (weekTitleEl) {
-                        peakWeekTitle = weekTitleEl.textContent.split('|')[0].trim();
+                        // Get full week info like "Week 11 | Apr 6 – Apr 12"
+                        const fullTitle = weekTitleEl.textContent.trim();
+                        // Extract week number and dates
+                        const match = fullTitle.match(/(Week \d+)\s*\|\s*(.+)/);
+                        if (match) {
+                            const weekNum = match[1]; // "Week 11"
+                            const dates = match[2].trim(); // "Apr 6 – Apr 12"
+                            peakWeekInfo = `${weekNum}: ${dates}`;
+                        } else {
+                            peakWeekInfo = fullTitle;
+                        }
                     }
                 }
             });
             
-            return { min: peakMin, max: peakMax, week: peakWeekTitle };
+            return { min: peakMin, max: peakMax, weekInfo: peakWeekInfo };
         }
         
         // Find longest run
@@ -2050,8 +2060,8 @@
                 } else {
                     peakText = `${peakData.min}–${peakData.max} km`;
                 }
-                if (peakData.week) {
-                    peakMileageEl.innerHTML = `${peakText}<br>(${peakData.week})`;
+                if (peakData.weekInfo) {
+                    peakMileageEl.innerHTML = `${peakText}<br>(${peakData.weekInfo})`;
                 } else {
                     peakMileageEl.textContent = peakText;
                 }
