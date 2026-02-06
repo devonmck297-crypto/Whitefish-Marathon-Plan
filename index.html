@@ -1896,6 +1896,53 @@
             }
         }
         
+        // Calculate weekly km total
+        function calculateWeeklyTotal(weekCard) {
+            const distanceElements = weekCard.querySelectorAll('.workout-distance');
+            let minTotal = 0;
+            let maxTotal = 0;
+            
+            distanceElements.forEach(el => {
+                const text = el.textContent.trim();
+                
+                // Skip rest days
+                if (text === '—' || text === '') return;
+                
+                // Extract numbers from text like "10-12 km" or "5 km"
+                const numbers = text.match(/(\d+(?:\.\d+)?)/g);
+                
+                if (numbers && numbers.length > 0) {
+                    if (numbers.length === 1) {
+                        // Single value like "5 km"
+                        const val = parseFloat(numbers[0]);
+                        minTotal += val;
+                        maxTotal += val;
+                    } else if (numbers.length >= 2) {
+                        // Range like "10-12 km"
+                        minTotal += parseFloat(numbers[0]);
+                        maxTotal += parseFloat(numbers[1]);
+                    }
+                }
+            });
+            
+            // Update the week total display
+            const weekTotalEl = weekCard.querySelector('.week-total');
+            if (weekTotalEl) {
+                if (minTotal === maxTotal) {
+                    weekTotalEl.textContent = `${minTotal} km`;
+                } else {
+                    weekTotalEl.textContent = `${minTotal}-${maxTotal} km`;
+                }
+            }
+        }
+        
+        // Update all weekly totals
+        function updateAllWeeklyTotals() {
+            document.querySelectorAll('.week-card').forEach(weekCard => {
+                calculateWeeklyTotal(weekCard);
+            });
+        }
+        
         // Initialize tracker
         function initializeTracker() {
             console.log('Initializing tracker...');
@@ -2076,6 +2123,9 @@
                 checkWeekCompliance(index + 1);
             });
             
+            // Calculate initial weekly totals
+            updateAllWeeklyTotals();
+            
             console.log('Tracker initialized!');
         }
         
@@ -2128,6 +2178,14 @@
                     
                     // Save to localStorage
                     localStorage.setItem(storageKey, newValue);
+                    
+                    // Update weekly total if distance was changed
+                    if (!isName) {
+                        const weekCard = target.closest('.week-card');
+                        if (weekCard) {
+                            calculateWeeklyTotal(weekCard);
+                        }
+                    }
                 }
                 
                 input.addEventListener('blur', finishEdit);
