@@ -2068,7 +2068,7 @@
                     distanceText = `${longestData.min}–${longestData.max} km`;
                 }
                 
-                // Get workout details from the longest run
+                // Get full workout description
                 const longestRunRow = Array.from(document.querySelectorAll('.day-row.long-run')).find(row => {
                     const distEl = row.querySelector('.workout-distance');
                     if (!distEl) return false;
@@ -2079,30 +2079,18 @@
                     return max === longestData.max;
                 });
                 
-                let workoutDetail = '';
+                let workoutName = '';
                 if (longestRunRow) {
-                    const workoutName = longestRunRow.querySelector('.workout-name');
-                    if (workoutName) {
-                        const nameText = workoutName.textContent;
-                        // Extract MP info if present
-                        if (nameText.includes('@ MP') || nameText.includes('MP')) {
-                            const mpMatch = nameText.match(/(\d+(?:-\d+)?)\s*km\s*(?:@|at)?\s*MP/i);
-                            if (mpMatch) {
-                                workoutDetail = ` with ${mpMatch[1]}km @ MP`;
-                            } else if (nameText.includes('Last')) {
-                                const lastMatch = nameText.match(/Last\s+(\d+(?:-\d+)?)\s*km/i);
-                                if (lastMatch) {
-                                    workoutDetail = ` with last ${lastMatch[1]}km @ MP`;
-                                }
-                            }
-                        }
+                    const workoutNameEl = longestRunRow.querySelector('.workout-name');
+                    if (workoutNameEl) {
+                        workoutName = workoutNameEl.textContent.trim();
                     }
                 }
                 
                 if (longestData.date) {
-                    longestRunEl.innerHTML = `${distanceText}${workoutDetail}<br>(${longestData.date})`;
+                    longestRunEl.innerHTML = `${distanceText}<br>${workoutName}<br>(${longestData.date})`;
                 } else {
-                    longestRunEl.textContent = distanceText + workoutDetail;
+                    longestRunEl.innerHTML = `${distanceText}<br>${workoutName}`;
                 }
             }
         }
